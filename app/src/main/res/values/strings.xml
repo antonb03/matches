@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Search</string>
+    <string name="matches_age_location">%1$d • %2$s, %3$s</string>
+    <string name="matches_percentage">%1$d \%</string>
+</resources>

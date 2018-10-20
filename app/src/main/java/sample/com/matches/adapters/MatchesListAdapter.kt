@@ -23,9 +23,6 @@ class MatchesListAdapter(var matchViewModel: MatchViewModel, var tabPosition:Int
             holder.bind(match)
             holder.matchLayout.setOnClickListener {
                 matchViewModel.likeUnlike(match, position)
-                if (tabPosition == 1){
-                    notifyItemRemoved(position)
-                }
             }
         }
     }

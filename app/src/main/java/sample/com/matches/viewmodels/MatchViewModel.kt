@@ -1,6 +1,5 @@
 package sample.com.matches.viewmodels
 
-import android.arch.lifecycle.MediatorLiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import sample.com.matches.models.LoadingStatus

@@ -10,17 +10,15 @@ import sample.com.matches.repo.MatchesRepo
 class MatchViewModel : ViewModel() {
 
     var matches = MutableLiveData<MutableList<Match>>()
-    var likes = MediatorLiveData<MutableList<Match>>()
+    var likes = MutableLiveData<MutableList<Match>>()
     var repo = MatchesRepo()
+    var itemRemoved = MutableLiveData<Int>()
 
     init {
         loadData()
-        likes.addSource(matches) {
-            getLikeList(it)
-        }
     }
 
-    fun getDisplayList(position:Int?): MutableLiveData<MutableList<Match>> {
+    fun getDisplayList(position: Int?): MutableLiveData<MutableList<Match>> {
         if (position != null) {
             if (position == 0) {
                 return matches
@@ -31,7 +29,7 @@ class MatchViewModel : ViewModel() {
         return MutableLiveData()
     }
 
-    fun getLikeList(originalList: MutableList<Match>?) {
+    fun getLikeList(originalList: MutableList<Match>?, updateAdapter: Boolean) {
         if (originalList != null) {
             var result = mutableListOf<Match>()
             for (item in originalList) {
@@ -41,27 +39,51 @@ class MatchViewModel : ViewModel() {
             }
             result.sortWith(compareByDescending { it.match })
             result = result.take(6).toMutableList()
-            likes.value = result
+            if (updateAdapter) {
+                likes.value = result
+            } else {
+                likes.value?.clear()
+                likes.value?.addAll(result)
+            }
         } else {
             likes.value = mutableListOf()
         }
     }
 
-    fun likeUnlike(match: Match, position: Int) {
+    fun likeUnlike(match: Match, position: Int, tabPosition: Int) {
+        var updateAdapter: Boolean
+        if (tabPosition == 1) {
+            itemRemoved.value = position
+            likes.value?.removeAt(position)
+            updateAdapter = false
+        } else {
+            updateAdapter = true
+        }
+        updateMatchList(match)
+        getLikeList(matches.value, updateAdapter)
+
+    }
+
+    fun getLikeSize(): Int {
+        return likes.value?.size ?: 0
+    }
+
+    fun updateMatchList(match: Match) {
         val currentList = matches.value ?: mutableListOf()
         for (item in currentList) {
             if (item.userid.equals(match.userid)) {
                 item.liked = !item.liked
+                break
             }
         }
         matches.value = currentList
     }
 
-    fun getLoadingStatus():MutableLiveData<LoadingStatus>{
+    fun getLoadingStatus(): MutableLiveData<LoadingStatus> {
         return repo.loadingStatus
     }
 
-    fun loadData(){
+    fun loadData() {
         matches = repo.requestMatches()
     }
 }

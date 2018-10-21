@@ -53,6 +53,12 @@ class ListFragment : Fragment() {
         matchViewModel.getDisplayList(position).observe(this, Observer {
             viewAdapter.notifyDataSetChanged()
         })
+        matchViewModel.itemRemoved.observe(this, Observer {
+            if(position == 1 && it != null){
+                viewAdapter.notifyItemRemoved(it)
+                viewAdapter.notifyItemRangeChanged(0, matchViewModel.getLikeSize())
+            }
+        })
         return rootView
     }
 

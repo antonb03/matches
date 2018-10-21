@@ -22,7 +22,7 @@ class MatchesListAdapter(var matchViewModel: MatchViewModel, var tabPosition:Int
         if (match != null) {
             holder.bind(match)
             holder.matchLayout.setOnClickListener {
-                matchViewModel.likeUnlike(match, position)
+                matchViewModel.likeUnlike(match, position, tabPosition)
             }
         }
     }

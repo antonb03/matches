@@ -30,6 +30,7 @@ class MatchViewModel : ViewModel() {
     }
 
     fun getLikeList(originalList: MutableList<Match>?, updateAdapter: Boolean) {
+        //get likes from original list
         if (originalList != null) {
             var result = mutableListOf<Match>()
             for (item in originalList) {
@@ -53,6 +54,7 @@ class MatchViewModel : ViewModel() {
     fun likeUnlike(match: Match, position: Int, tabPosition: Int) {
         var updateAdapter: Boolean
         if (tabPosition == 1) {
+            //if clicked on Matches% tab update itemRemoved to add animation
             itemRemoved.value = position
             likes.value?.removeAt(position)
             updateAdapter = false
